@@ -1,0 +1,44 @@
+% Facts about symptoms and diseases
+symptom(fever, [flu, cold, malaria]).
+symptom(cough, [flu, cold]).
+symptom(headache, [flu, migraine]).
+symptom(rash, [allergy, measles]).
+symptom(runny_nose, [flu, cold]).
+symptom(fatigue, [flu, malaria]).
+symptom(sneezing, [cold, allergy]).
+symptom(chills, [malaria, flu]).
+
+% Rule to find possible diseases based on symptoms
+possible_diseases(Symptoms, Diseases) :-
+    % Find all possible diseases for each symptom
+    findall(Disease, 
+        (member(Symptom, Symptoms), symptom(Symptom, DiseasesForSymptom), member(Disease, DiseasesForSymptom)), 
+        AllDiseases),
+    % Find unique diseases
+    list_to_set(AllDiseases, UniqueDiseases),
+    % Filter diseases that match all symptoms
+    filter_diseases(UniqueDiseases, Symptoms, Diseases).
+
+% Helper predicate to filter diseases that match all symptoms
+filter_diseases([], _, []).
+filter_diseases([Disease | RestDiseases], Symptoms, [Disease | FilteredRest]) :-
+    matches_all_symptoms(Disease, Symptoms),
+    filter_diseases(RestDiseases, Symptoms, FilteredRest).
+filter_diseases([_ | RestDiseases], Symptoms, FilteredRest) :-
+    filter_diseases(RestDiseases, Symptoms, FilteredRest).
+
+% Check if a disease matches all given symptoms
+matches_all_symptoms(Disease, Symptoms) :-
+    forall(member(Symptom, Symptoms), 
+        (symptom(Symptom, DiseasesForSymptom), member(Disease, DiseasesForSymptom))).
+
+% Convert a list to a set (remove duplicates)
+list_to_set(List, Set) :-
+    sort(List, Set).
+
+% Example queries
+% ?- possible_diseases([fever, cough], Diseases).
+% Diseases = [flu, cold].
+
+% ?- possible_diseases([fever, headache], Diseases).
+% Diseases = [flu, migraine].

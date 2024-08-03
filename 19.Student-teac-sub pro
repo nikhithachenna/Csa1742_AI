@@ -1,0 +1,15 @@
+student(nikki,csa1742).
+teacher(godwin,csa1742).
+subject(csa1742,ai).
+student_subcode(Student,Subject):-
+    student(Student,Subject).
+teacher_subcode(Teacher,Subject):-
+    teacher(Teacher,Subject).
+student_teacher(Student,Teacher):-
+    student(Student,Subject),teacher(Teacher,Subject).
+subject_name(Subject,Subjectname):-
+    subject(Subject,Subjectname).
+student_subname(Student,Subjectname):-
+    student(Student,Subject),subject(Subject,Subjectname).
+student_teacher_subject(Student,Teacher,Subject,Subjectname):-
+    student(Student,Subject),teacher(Teacher,Subject),subject(Subject,Subjectname).

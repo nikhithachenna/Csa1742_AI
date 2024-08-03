@@ -1,0 +1,57 @@
+import random
+
+class VacuumAgent:
+    def __init__(self, grid_size):
+        self.grid_size = grid_size
+        self.position = (random.randint(0, grid_size-1), random.randint(0, grid_size-1))
+        self.direction = 'right'  # initial direction
+
+    def move(self):
+        if self.direction == 'right':
+            self.position = (self.position[0], (self.position[1] + 1) % self.grid_size)
+        elif self.direction == 'left':
+            self.position = (self.position[0], (self.position[1] - 1 + self.grid_size) % self.grid_size)
+        elif self.direction == 'up':
+            self.position = ((self.position[0] - 1 + self.grid_size) % self.grid_size, self.position[1])
+        elif self.direction == 'down':
+            self.position = ((self.position[0] + 1) % self.grid_size, self.position[1])
+
+    def turn_left(self):
+        if self.direction == 'right':
+            self.direction = 'up'
+        elif self.direction == 'up':
+            self.direction = 'left'
+        elif self.direction == 'left':
+            self.direction = 'down'
+        elif self.direction == 'down':
+            self.direction = 'right'
+
+    def turn_right(self):
+        if self.direction == 'right':
+            self.direction = 'down'
+        elif self.direction == 'down':
+            self.direction = 'left'
+        elif self.direction == 'left':
+            self.direction = 'up'
+        elif self.direction == 'up':
+            self.direction = 'right'
+
+    def clean(self):
+        print(f"Cleaning position: {self.position}")
+
+    def run(self, steps):
+        for _ in range(steps):
+            self.clean()
+            if random.random() < 0.8:  # 80% chance to move forward
+                self.move()
+            else:
+                if random.random() < 0.5:
+                    self.turn_left()
+                else:
+                    self.turn_right()
+
+if __name__ == "__main__":
+    grid_size = 5
+    steps = 10
+    vacuum = VacuumAgent(grid_size)
+    vacuum.run(steps)
